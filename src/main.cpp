@@ -65,6 +65,8 @@ HashInfo g_hashes[] =
   { SpookyHash32_test,    32, 0x3F798BBB, "Spooky32",    "Bob Jenkins' SpookyHash, 32-bit result" },
   { SpookyHash64_test,    64, 0xA7F955F1, "Spooky64",    "Bob Jenkins' SpookyHash, 64-bit result" },
   { SpookyHash128_test,  128, 0x8D263080, "Spooky128",   "Bob Jenkins' SpookyHash, 128-bit result" },
+  { SpookyHash64V2_test,  64, 0x972C4BDC, "Spooky64V2",  "Bob Jenkins' SpookyHashV2, 64-bit result" },
+  { SpookyHash128V2_test,128, 0x893CFCBE, "SpookyV2",    "Bob Jenkins' SpookyHashV2, 128-bit result" },
 
   // MurmurHash2
 

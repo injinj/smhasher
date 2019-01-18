@@ -25,6 +25,7 @@ add_library(
   sha1.cpp
   SpeedTest.cpp
   Spooky.cpp
+  SpookyV2.cpp
   SpookyTest.cpp
   Stats.cpp
   SuperFastHash.cpp
