@@ -44,7 +44,7 @@
 #endif
 
 
-class SpookyHash
+class SpookyHashV2
 {
 public:
     //
