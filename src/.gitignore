@@ -1,8 +1,10 @@
 SMHasher
+SMHasher.exe
 CMakeCache.txt
 CMakeFiles
 Makefile
 cmake_install.cmake
 *.a
+*.o
 *~
 

@@ -4,6 +4,7 @@
 #include "SpeedTest.h"
 #include "AvalancheTest.h"
 #include "DifferentialTest.h"
+#include "LongNeighborTest.h"
 #include "PMurHash.h"
 
 #include <stdio.h>
@@ -28,6 +29,7 @@ bool g_testWindow      = false;
 bool g_testText        = false;
 bool g_testZeroes      = false;
 bool g_testSeed        = false;
+bool g_testLongNeighbs = false;
 
 //-----------------------------------------------------------------------------
 // This is the list of all hashes that SMHasher can test.
@@ -490,6 +492,21 @@ void test ( hashfunc<hashtype> hash, HashInfo * info )
     if(!result) printf("*********FAIL*********\n");
     printf("\n");
   }
+
+  //-----------------------------------------------------------------------------
+  // Keyset 'TestLongNeighbors' - collisions between long messages of low Hamming distance
+
+  if(g_testLongNeighbs || g_testAll)
+  {
+    printf("[[[ Keyset 'TestLongNeighbors' Tests ]]]\n\n");
+
+    bool result = true;
+
+    result &= testLongNeighbors(info->hash, info->hashbits);
+
+    if(!result) printf("*********FAIL*********\n");
+    printf("\n");
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -570,7 +587,7 @@ int main ( int argc, char ** argv )
 
   int timeBegin = clock();
 
-  g_testAll = true;
+  //g_testAll = true;
 
   //g_testSanity = true;
   //g_testSpeed = true;
@@ -584,6 +601,7 @@ int main ( int argc, char ** argv )
   //g_testPermutation = true;
   //g_testWindow = true;
   //g_testZeroes = true;
+  g_testLongNeighbs = true;
 
   testHash(hashToTest);
 
