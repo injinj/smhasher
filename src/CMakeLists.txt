@@ -30,6 +30,8 @@ add_library(
   SuperFastHash.cpp
   Types.cpp
   PMurHash.c
+  AESTest.cpp
+  RiskyTest.cpp
 )
 
 add_executable(

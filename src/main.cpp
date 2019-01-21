@@ -66,6 +66,13 @@ HashInfo g_hashes[] =
   { SpookyHash64_test,    64, 0xA7F955F1, "Spooky64",    "Bob Jenkins' SpookyHash, 64-bit result" },
   { SpookyHash128_test,  128, 0x8D263080, "Spooky128",   "Bob Jenkins' SpookyHash, 128-bit result" },
 
+  // injinj hashes
+
+  { AESHash128_test,     128, 0x3FC3FED2, "AES128",      "AES128-bit result" },
+  { AESHash64_test,       64, 0x5243FFAC, "AES64",       "AES64-bit result" },
+  { RiskyHash64_test,     64, 0x1A4E494A, "Risky64",     "facil.io RiskyHash 64-bit" },
+  { RiskyHash128_test,   128, 0x16F676D5, "Risky128",    "facil.io RiskyHash 128-bit" },
+
   // MurmurHash2
 
   { MurmurHash2_test,     32, 0x27864C1E, "Murmur2",     "MurmurHash2 for x86, 32-bit" },
@@ -97,13 +104,20 @@ HashInfo * findHash ( const char * name )
 
 void SelfTest ( void )
 {
-  bool pass = true;
+  bool pass = true, x;
 
   for(size_t i = 0; i < sizeof(g_hashes) / sizeof(HashInfo); i++)
   {
     HashInfo * info = & g_hashes[i];
 
-    pass &= VerificationTest(info->hash,info->hashbits,info->verification,false);
+    x = VerificationTest(info->hash,info->hashbits,info->verification,false);
+    if ( ! x ) {
+      printf("%16s - failed\n",info->name);
+      x = VerificationTest(info->hash,info->hashbits,info->verification,false);
+      if ( ! x )
+        printf("%16s - failed again\n",info->name);
+    }
+    pass &= x;
   }
 
   if(!pass)
@@ -191,8 +205,9 @@ void test ( hashfunc<hashtype> hash, HashInfo * info )
     printf("[[[ Differential Distribution Tests ]]]\n\n");
 
     bool result = true;
+    bool drawDiagram = false;
 
-    result &= DiffDistTest2<uint64_t,hashtype>(hash);
+    result &= DiffDistTest2<uint64_t,hashtype>(hash,drawDiagram);
 
     printf("\n");
   }
@@ -562,9 +577,9 @@ int main ( int argc, char ** argv )
 
   // Code runs on the 3rd CPU by default
 
-  SetAffinity((1 << 2));
+  //SetAffinity((1 << 3));
 
-  SelfTest();
+  //SelfTest();
 
   int timeBegin = clock();
 
@@ -573,7 +588,7 @@ int main ( int argc, char ** argv )
   //g_testSanity = true;
   //g_testSpeed = true;
   //g_testAvalanche = true;
-  //g_testBIC = true;
+  //g_testBIC = false;
   //g_testCyclic = true;
   //g_testTwoBytes = true;
   //g_testDiff = true;
