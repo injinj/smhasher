@@ -18,6 +18,40 @@ Here are graphs for the 64 bit and 128 bit hashes as run on a i9-7960X
 (skylake) using these gnuplot scripts: [plot64.gnuplot](plot64.gnuplot)
 and [plot128.gnuplot](plot128.gnuplot).
 
+To use the plot scripts, load them in gnuplot like this:
+
+```console
+[5493]; gnuplot-qt                                                                                                                                                  
+
+        G N U P L O T
+        Version 5.0 patchlevel 6    last modified 2017-03-18
+
+        Copyright (C) 1986-1993, 1998, 2004, 2007-2017
+        Thomas Williams, Colin Kelley and many others
+
+        gnuplot home:     http://www.gnuplot.info
+        faq, bugs, etc:   type "help FAQ"
+        immediate help:   type "help"  (plot window: hit 'h')
+
+Terminal type set to 'qt'
+gnuplot> load "plot64.gnuplot"
+donothing64
+City64
+Spooky64
+AES64
+Risky64
+Murmur2B
+Murmur2C
+gnuplot> load "plot128.gnuplot"
+donothing128
+City128
+Spooky128
+AES128
+Risky128
+Murmur3C
+Murmur3F
+```
+
 ![plot64](plot64.svg)
 
 ![plot128](plot128.svg)
