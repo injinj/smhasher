@@ -58,7 +58,7 @@ static const uint64_t FIO_RISKY_PRIME_0 = 0xFBBA3FA15B22113B, // 111110111011101
     fio_risky_consume(fio_str2u64(data), 0); \
     data += len & 24; \
   } \
-  uintptr_t tmp = 0; \
+  uint64_t tmp = 0; \
   switch ((len & 7)) { \
   case 7: \
     tmp |= ((uint64_t)data[6]) << 56; \

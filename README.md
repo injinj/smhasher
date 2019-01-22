@@ -6,6 +6,22 @@ require AES and AVX support on x64.
 2. [RiskyTest.cpp](src/RiskyTest.cpp) and [RiskyHash.h](src/RiskyHash.h) are hashes derived from
 [facil.io](https://github.com/boazsegev/facil.io) located in [fio.h](https://github.com/boazsegev/facil.io/blob/master/lib/facil/fio.h).
 
+I also modified the Speed test to repeat the small hashes 16 times in order to
+show the cycles when the hash is hot in the CPU.  The old way that SMHasher was
+doing it, caused the overhead of the timing code to dominate the overall time.
+This is unrealistic in real life, but it shows the differences between the
+hashes a bit more clearly.  Also, cycle times on the order of nanoseconds
+rarely makes that big of a difference.  What is more likely is that the memory
+latency of loading the key will dominate the time of the hash.
+
+Here are graphs for the 64 bit and 128 bit hashes as run on a i9-7960X
+(skylake) using these gnuplot scripts: [plot64.gnuplot](plot64.gnuplot)
+and [plot128.gnuplot](plot128.gnuplot).
+
+![plot64](plot64.svg)
+
+![plot128](plot128.svg)
+
 Original SMHasher Readme:
 
 ## [SMHasher](https://github.com/aappleby/smhasher/wiki) is a test suite designed to test the distribution, collision, and performance properties of non-cryptographic hash functions.

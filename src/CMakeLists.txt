@@ -2,6 +2,8 @@ project(SMHasher)
 
 cmake_minimum_required(VERSION 2.4)
 
+set(CMAKE_C_FLAGS_RELEASE "-O3 -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 set(CMAKE_BUILD_TYPE Release)
 
 add_library(

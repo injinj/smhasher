@@ -15,6 +15,7 @@
 bool g_testAll = false;
 
 bool g_testSanity      = false;
+bool g_testBulkSpeed   = false;
 bool g_testSpeed       = false;
 bool g_testDiff        = false;
 bool g_testDiffDist    = false;
@@ -28,6 +29,7 @@ bool g_testWindow      = false;
 bool g_testText        = false;
 bool g_testZeroes      = false;
 bool g_testSeed        = false;
+bool g_plot            = false;
 
 //-----------------------------------------------------------------------------
 // This is the list of all hashes that SMHasher can test.
@@ -143,8 +145,11 @@ void test ( hashfunc<hashtype> hash, HashInfo * info )
 {
   const int hashbits = sizeof(hashtype) * 8;
 
-  printf("-------------------------------------------------------------------------------\n");
-  printf("--- Testing %s (%s)\n\n",info->name,info->desc);
+  if ( ! g_plot )
+  {
+    printf("-------------------------------------------------------------------------------\n");
+    printf("--- Testing %s (%s)\n\n",info->name,info->desc);
+  }
 
   //-----------------------------------------------------------------------------
   // Sanity tests
@@ -162,21 +167,28 @@ void test ( hashfunc<hashtype> hash, HashInfo * info )
   //-----------------------------------------------------------------------------
   // Speed tests
 
-  if(g_testSpeed || g_testAll)
+  if(g_testSpeed || g_testBulkSpeed || g_testAll)
   {
-    printf("[[[ Speed Tests ]]]\n\n");
+    if ( ! g_plot )
+      printf("[[[ Speed Tests ]]]\n\n");
 
-    BulkSpeedTest(info->hash,info->verification);
-    printf("\n");
-
-    for(int i = 1; i < 32; i++)
+    if ( g_testBulkSpeed || g_testAll )
     {
-      double cycles;
-
-      TinySpeedTest(hashfunc<hashtype>(info->hash),sizeof(hashtype),i,info->verification,true,cycles);
+      BulkSpeedTest(info->hash,info->verification,g_plot);
+      if ( ! g_plot )
+        printf("\n");
     }
+    if ( g_testSpeed || g_testAll )
+    {
+      for(int i = 1; i < 64; i++)
+      {
+        double cycles;
 
-    printf("\n");
+        TinySpeedTest(hashfunc<hashtype>(info->hash),sizeof(hashtype),i,info->verification,cycles,g_plot);
+      }
+    }
+    if ( ! g_plot )
+      printf("\n");
   }
 
   //-----------------------------------------------------------------------------
@@ -562,51 +574,117 @@ void testHash ( const char * name )
 }
 //-----------------------------------------------------------------------------
 
+bool args_find( int argc,  char ** argv,  const char *arg_short,  const char *arg_long )
+{
+  for ( int i = 1; i < argc; i++ ) {
+    if ( strcmp( argv[ i ], arg_short ) == 0 ||
+         strcmp( argv[ i ], arg_long ) == 0 )
+      return true;
+  }
+  return false;
+}
+
 int main ( int argc, char ** argv )
 {
   const char * hashToTest = "murmur3a";
+  size_t sz = 0, i, l;
+  clock_t timeBegin, timeEnd;
+  bool do_everything = false, do_32 = false, do_64 = false, do_128 = false;
 
-  if(argc < 2)
+  if( argc > 1 )
   {
-    printf("(No test hash given on command line, testing Murmur3_x86_32.)\n");
-  }
-  else
-  {
-    hashToTest = argv[1];
+    if ( args_find( argc, argv, "-h", "--help" ) )
+    {
+      printf(
+        "%s <hash> [options]\n"
+        "  options:\n"
+        "    -y / --sanity      : Test sanity\n"
+        "    -s / --speed       : Small key speed\n"
+        "    -n / --plot        : Output numbers for gnuplot\n"
+        "    -k / --bulk        : Bulk key speed\n"
+        "    -a / --avalanche   : Avalanche test\n"
+        "    -b / --bic         : BIC test\n"
+        "    -c / --cyclic      : Cyclic test\n"
+        "    -t / --twobytes    : Two bytes test\n"
+        "    -d / --diff        : Differential test\n"
+        "    -l / --diffdist    : Differential distance test\n"
+        "    -r / --sparse      : Sparce test\n"
+        "    -p / --permutation : Permutation test\n"
+        "    -w / --window      : Window test\n"
+        "    -z / --zeroes      : Zeroes test\n"
+        "    -x / --text        : Text test\n"
+        "    -e / --seed        : Seed test\n"
+        "    -v / --everything  : Test all hashes\n"
+        "    -32  / --64        : Test 32 bit hashes\n"
+        "    -64  / --64        : Test 64 bit hashes\n"
+        "    -128 / --128       : Test 128 bit hashes\n"
+        "    -a / --all         : Do all tests\n", argv[ 0 ] );
+      printf( "  <hash> is one of:\n" );
+
+      for ( i = 0; i < sizeof( g_hashes ) / sizeof( g_hashes[ 0 ] ); i++ )
+        if ( (l = strlen( g_hashes[ i ].name )) > sz )
+          sz = l;
+      for ( i = 0; i < sizeof( g_hashes ) / sizeof( g_hashes[ 0 ] ); i++ )
+        printf( "  %*s : %s\n", (int) sz + 3, g_hashes[ i ].name, g_hashes[ i ].desc );
+
+      return 0;
+    }
+    if ( argv[ 1 ][ 0 ] != '-' )
+      hashToTest = argv[ 1 ];
   }
 
   // Code runs on the 3rd CPU by default
 
   //SetAffinity((1 << 3));
-
   //SelfTest();
-
-  int timeBegin = clock();
 
   g_testAll = true;
 
-  //g_testSanity = true;
-  //g_testSpeed = true;
-  //g_testAvalanche = true;
-  //g_testBIC = false;
-  //g_testCyclic = true;
-  //g_testTwoBytes = true;
-  //g_testDiff = true;
-  //g_testDiffDist = true;
-  //g_testSparse = true;
-  //g_testPermutation = true;
-  //g_testWindow = true;
-  //g_testZeroes = true;
+  if ( argc > 2 || ( argc > 1 && argv[ 1 ][ 0 ] == '-' ) ) {
+    g_testSanity      = args_find( argc, argv, "-y", "--sanity" );
+    g_testSpeed       = args_find( argc, argv, "-s", "--speed" );
+    g_plot            = args_find( argc, argv, "-n", "--plot" );
+    g_testBulkSpeed   = args_find( argc, argv, "-k", "--bulk" );
+    g_testAvalanche   = args_find( argc, argv, "-a", "--avalanche" );
+    g_testBIC         = args_find( argc, argv, "-b", "--bic" );
+    g_testCyclic      = args_find( argc, argv, "-c", "--cyclic" );
+    g_testTwoBytes    = args_find( argc, argv, "-t", "--twobytes" );
+    g_testDiff        = args_find( argc, argv, "-d", "--diff" );
+    g_testDiffDist    = args_find( argc, argv, "-l", "--diffdist" );
+    g_testSparse      = args_find( argc, argv, "-r", "--sparse" );
+    g_testPermutation = args_find( argc, argv, "-p", "--permutation" );
+    g_testWindow      = args_find( argc, argv, "-w", "--window" );
+    g_testZeroes      = args_find( argc, argv, "-z", "--zeroes" );
+    g_testText        = args_find( argc, argv, "-x", "--text" );
+    g_testSeed        = args_find( argc, argv, "-e", "--seed" );
+    g_testAll         = args_find( argc, argv, "-a", "--all" );
+    do_everything     = args_find( argc, argv, "-v", "--everything" );
+    do_32             = args_find( argc, argv, "-32", "--32" );
+    do_64             = args_find( argc, argv, "-64", "--64" );
+    do_128            = args_find( argc, argv, "-128", "--128" );
+  }
 
-  testHash(hashToTest);
+  if ( do_everything || do_32 || do_64 || do_128 ) {
+    for ( i = 0; i < sizeof( g_hashes ) / sizeof( g_hashes[ 0 ] ); i++ ) {
+      if ( do_everything ||
+           ( do_32 && g_hashes[ i ].hashbits == 32 ) ||
+           ( do_64 && g_hashes[ i ].hashbits == 64 ) ||
+           ( do_128 && g_hashes[ i ].hashbits == 128 ) ) {
+        testHash( g_hashes[ i ].name );
+      }
+    }
+  }
+  else {
+    timeBegin = clock();
+    testHash(hashToTest);
+    timeEnd = clock();
 
-  //----------
-
-  int timeEnd = clock();
-
-  printf("\n");
-  printf("Input vcode 0x%08x, Output vcode 0x%08x, Result vcode 0x%08x\n",g_inputVCode,g_outputVCode,g_resultVCode);
-  printf("Verification value is 0x%08x - Testing took %f seconds\n",g_verify,double(timeEnd-timeBegin)/double(CLOCKS_PER_SEC));
-  printf("-------------------------------------------------------------------------------\n");
+    if ( ! g_plot ) {
+      printf("\n");
+      printf("Input vcode 0x%08x, Output vcode 0x%08x, Result vcode 0x%08x\n",g_inputVCode,g_outputVCode,g_resultVCode);
+      printf("Verification value is 0x%08x - Testing took %f seconds\n",g_verify,double(timeEnd-timeBegin)/double(CLOCKS_PER_SEC));
+      printf("-------------------------------------------------------------------------------\n");
+    }
+  }
   return 0;
 }

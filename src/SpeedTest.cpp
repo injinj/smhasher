@@ -154,12 +154,17 @@ NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed
   
   uint32_t temp[16];
   
+  if ( len < 1024 ) {
+    begin = rdtsc();
+    for (int i = 0; i < 16; i++)
+      hash(key,len,seed,temp);
+    end = rdtsc();
+    return (end-begin) >> 4;
+  }
+
   begin = rdtsc();
-  
   hash(key,len,seed,temp);
-  
   end = rdtsc();
-  
   return end-begin;
 }
 
@@ -208,12 +213,13 @@ double SpeedTest ( pfHash hash, uint32_t seed, const int trials, const int block
 //-----------------------------------------------------------------------------
 // 256k blocks seem to give the best results.
 
-void BulkSpeedTest ( pfHash hash, uint32_t seed )
+void BulkSpeedTest ( pfHash hash, uint32_t seed, bool plot )
 {
   const int trials = 2999;
   const int blocksize = 256 * 1024;
 
-  printf("Bulk speed test - %d-byte keys\n",blocksize);
+  if ( ! plot )
+    printf("Bulk speed test - %d-byte keys\n",blocksize);
 
   for(int align = 0; align < 8; align++)
   {
@@ -222,21 +228,30 @@ void BulkSpeedTest ( pfHash hash, uint32_t seed )
     double bestbpc = double(blocksize)/cycles;
     
     double bestbps = (bestbpc * 3000000000.0 / 1048576.0);
-    printf("Alignment %2d - %6.3f bytes/cycle - %7.2f MiB/sec @ 3 ghz\n",align,bestbpc,bestbps);
+    if ( plot )
+      printf("%2d %6.3f\n",align,bestbpc);
+    else
+      printf("Alignment %2d - %6.3f bytes/cycle - %7.2f MiB/sec @ 3 ghz\n",align,bestbpc,bestbps);
   }
 }
 
 //-----------------------------------------------------------------------------
 
-void TinySpeedTest ( pfHash hash, int hashsize, int keysize, uint32_t seed, bool verbose, double & /*outCycles*/ )
+void TinySpeedTest ( pfHash hash, int hashsize, int keysize, uint32_t seed, double & /*outCycles*/, bool plot )
 {
   const int trials = 999999;
 
-  if(verbose) printf("Small key speed test - %4d-byte keys - ",keysize);
+  if ( ! plot )
+    printf("Small key speed test - %4d-byte keys - ",keysize);
+  else
+    printf("%d ",keysize);
   
   double cycles = SpeedTest(hash,seed,trials,keysize,0);
   
-  printf("%8.2f cycles/hash\n",cycles);  
+  if ( ! plot )
+    printf("%8.2f cycles/hash\n",cycles);  
+  else
+    printf("%8.2f\n",cycles);  
 }
 
 //-----------------------------------------------------------------------------
