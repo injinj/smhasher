@@ -154,11 +154,21 @@ NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed
   
   uint32_t temp[16];
   
-  if ( len < 1024 ) {
+  if (len < 1024)
+  {
+    uint32_t align_len = (len + 3) / 4;
+    uint32_t *buf = new uint32_t[align_len]; /* from rurban */
+    memset(buf, 0, align_len * 4);
+    memcpy(buf, key, len);
     begin = rdtsc();
     for (int i = 0; i < 16; i++)
-      hash(key,len,seed,temp);
+    {
+      hash(buf,len,seed,temp);
+      seed += temp[0];
+      buf[0] ^= temp[0];
+    }
     end = rdtsc();
+    delete [] buf;
     return (end-begin) >> 4;
   }
 

@@ -37,8 +37,8 @@ plot "donothing64.txt" with linespoints, \
      "AES64.txt" with linespoints, \
      "AES64label.txt" with labels offset +4,0, \
      "Risky64.txt" with linespoints, \
-     "Risky64label.txt" with labels offset +5,+1, \
+     "Risky64label.txt" with labels offset +5,0, \
      "Murmur2B.txt" with linespoints, \
-     "Murmur2Blabel.txt" with labels offset +6,-1, \
+     "Murmur2Blabel.txt" with labels offset +6,+1, \
      "Murmur2C.txt" with linespoints, \
      "Murmur2Clabel.txt" with labels offset +6,0

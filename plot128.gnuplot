@@ -39,6 +39,6 @@ plot "donothing128.txt" with linespoints, \
      "Risky128.txt" with linespoints, \
      "Risky128label.txt" with labels offset +5,0, \
      "Murmur3C.txt" with linespoints, \
-     "Murmur3Clabel.txt" with labels offset +6,-1, \
+     "Murmur3Clabel.txt" with labels offset +6,0, \
      "Murmur3F.txt" with linespoints, \
-     "Murmur3Flabel.txt" with labels offset +6,+1
+     "Murmur3Flabel.txt" with labels offset +6,0
