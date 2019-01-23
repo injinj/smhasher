@@ -18,10 +18,14 @@ Here are graphs for the 64 bit and 128 bit hashes as run on a i9-7960X
 (skylake) using these gnuplot scripts: [plot64.gnuplot](plot64.gnuplot)
 and [plot128.gnuplot](plot128.gnuplot).
 
-To use the plot scripts, load them in gnuplot like this:
+To use the plot scripts, load them in gnuplot like this (I'm using Fedora 28):
 
 ```console
-[5493]; gnuplot-qt                                                                                                                                                  
+[5875]; git clone https://github.com/injinj/smhasher
+[5876]; cd smhasher
+[5877]; cmake src
+[5878]; make
+[5879]; gnuplot-qt
 
         G N U P L O T
         Version 5.0 patchlevel 6    last modified 2017-03-18
