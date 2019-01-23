@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is smhasher with a couple of hashes I added.
 
 1. [AESTest.cpp](src/AESTest.cpp) and [AESHash.h](src/AESHash.h) are AES based hashes, these
@@ -62,6 +63,8 @@ Murmur3F
 
 Original SMHasher Readme:
 
+=======
+>>>>>>> 88e89762ea2e429040f7c235c5304cdb978a236e
 ## [SMHasher](https://github.com/aappleby/smhasher/wiki) is a test suite designed to test the distribution, collision, and performance properties of non-cryptographic hash functions.
 
 This is the home for the [MurmurHash](https://github.com/aappleby/smhasher/tree/master/src) family of hash functions along with the [SMHasher](https://github.com/aappleby/smhasher/tree/master/src) test suite used to verify them. SMHasher is released under the MIT license. All MurmurHash versions are public domain software, and the author disclaims all copyright to their code.

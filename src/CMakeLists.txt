@@ -15,6 +15,8 @@ add_library(
   City.cpp
   crc.cpp
   DifferentialTest.cpp
+  LongNeighborTest.cpp
+  Birthday.cpp
   Hashes.cpp
   KeysetTest.cpp
   lookup3.cpp
@@ -27,6 +29,7 @@ add_library(
   sha1.cpp
   SpeedTest.cpp
   Spooky.cpp
+  SpookyV2.cpp
   SpookyTest.cpp
   Stats.cpp
   SuperFastHash.cpp

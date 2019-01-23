@@ -4,6 +4,7 @@
 #include "SpeedTest.h"
 #include "AvalancheTest.h"
 #include "DifferentialTest.h"
+#include "LongNeighborTest.h"
 #include "PMurHash.h"
 
 #include <stdio.h>
@@ -29,6 +30,7 @@ bool g_testWindow      = false;
 bool g_testText        = false;
 bool g_testZeroes      = false;
 bool g_testSeed        = false;
+bool g_testLongNeighbs = false;
 bool g_plot            = false;
 
 //-----------------------------------------------------------------------------
@@ -74,6 +76,11 @@ HashInfo g_hashes[] =
   { AESHash64_test,       64, 0x5243FFAC, "AES64",       "AES64-bit result" },
   { RiskyHash64_test,     64, 0x2E6E523C, "Risky64",     "facil.io RiskyHash 64-bit" },
   { RiskyHash128_test,   128, 0x3E7F7A8B, "Risky128",    "facil.io RiskyHash 128-bit" },
+
+  // hmakholm hashes
+
+  { SpookyHash64V2_test,  64, 0x972C4BDC, "Spooky64V2",  "Bob Jenkins' SpookyHashV2, 64-bit result" },
+  { SpookyHash128V2_test,128, 0x893CFCBE, "SpookyV2",    "Bob Jenkins' SpookyHashV2, 128-bit result" },
 
   // MurmurHash2
 
@@ -515,6 +522,21 @@ void test ( hashfunc<hashtype> hash, HashInfo * info )
     if(!result) printf("*********FAIL*********\n");
     printf("\n");
   }
+
+  //-----------------------------------------------------------------------------
+  // Keyset 'TestLongNeighbors' - collisions between long messages of low Hamming distance
+
+  if(g_testLongNeighbs || g_testAll)
+  {
+    printf("[[[ Keyset 'TestLongNeighbors' Tests ]]]\n\n");
+
+    bool result = true;
+
+    result &= testLongNeighbors(info->hash, info->hashbits);
+
+    if(!result) printf("*********FAIL*********\n");
+    printf("\n");
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -577,9 +599,14 @@ void testHash ( const char * name )
 bool args_find( int argc,  char ** argv,  const char *arg_short,  const char *arg_long )
 {
   for ( int i = 1; i < argc; i++ ) {
-    if ( strcmp( argv[ i ], arg_short ) == 0 ||
-         strcmp( argv[ i ], arg_long ) == 0 )
-      return true;
+    if ( argv[ i ][ 0 ] == '-' ) {
+      if ( strcmp( argv[ i ], arg_long ) == 0 )
+        return true;
+      if ( argv[ i ][ 1 ] != '-' ) {
+        if ( strchr( &argv[ i ][ 1 ], arg_short[ 1 ] ) != NULL ) /* allow combining short args: -axv */
+          return true;
+      }
+    }
   }
   return false;
 }
@@ -614,6 +641,7 @@ int main ( int argc, char ** argv )
         "    -z / --zeroes      : Zeroes test\n"
         "    -x / --text        : Text test\n"
         "    -e / --seed        : Seed test\n"
+        "    -o / --longneigh   : Long neighbors test\n"
         "    -v / --everything  : Test all hashes\n"
         "    -32  / --64        : Test 32 bit hashes\n"
         "    -64  / --64        : Test 64 bit hashes\n"
@@ -657,6 +685,7 @@ int main ( int argc, char ** argv )
     g_testZeroes      = args_find( argc, argv, "-z", "--zeroes" );
     g_testText        = args_find( argc, argv, "-x", "--text" );
     g_testSeed        = args_find( argc, argv, "-e", "--seed" );
+    g_testLongNeighbs = args_find( argc, argv, "-o", "--longneigh" );
     g_testAll         = args_find( argc, argv, "-a", "--all" );
     do_everything     = args_find( argc, argv, "-v", "--everything" );
     do_32             = args_find( argc, argv, "-32", "--32" );
