@@ -267,9 +267,9 @@ namespace {
       need *= 3;
       if( hashCapacity < need ) {
         do hashCapacity <<= 1; while( hashCapacity < need );
-        delete hashTable;
+        delete [] hashTable;
         hashTable = new PackedDelta[hashCapacity];
-        delete fullHashes;
+        delete [] fullHashes;
         fullHashes = new uint8_t[hashCapacity*hashbytes];
       }
       size_t capacityUsed = hashCapacity ;
@@ -483,7 +483,7 @@ namespace {
       Message base;
       bool passing ;
       for( base.length=MINMSGBYTES; base.length <= MAXMSGBYTES; base.length++ ) {
-        random.reseed(base.length);
+        random.reseed((uint64_t) base.length);
 
         for( int i=0; i<BASES_PER_LENGTH; i++ ) {
           if( i == 0 )
@@ -528,8 +528,8 @@ namespace {
     { }
 
     ~TestLongNeighbors() {
-      delete hashTable;
-      delete fullHashes;
+      delete [] hashTable;
+      delete [] fullHashes;
     }
 
     bool run() {
