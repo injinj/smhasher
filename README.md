@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 This is smhasher with a couple of hashes I added.
 
 1. [AESTest.cpp](src/AESTest.cpp) and [AESHash.h](src/AESHash.h) are AES based hashes, these
@@ -6,6 +5,18 @@ require AES and AVX support on x64.
 
 2. [RiskyTest.cpp](src/RiskyTest.cpp) and [RiskyHash.h](src/RiskyHash.h) are hashes derived from
 [facil.io](https://github.com/boazsegev/facil.io) located in [fio.h](https://github.com/boazsegev/facil.io/blob/master/lib/facil/fio.h).
+
+I merged the LongNeighborTest from [hmakholm](https://github.com/hmakholm/smhasher):
+
+> # Fork information
+>
+> This fork of SMhasher is the home of a new test to discover
+> hash collisions with small Hamming distance; see [LongNeighborTest](src/LongNeighborTest.md).
+>
+> The plan is to contribute this upstream (but given that the upstream repo has
+> a numer of open pull requests, yet no commits since the "woo, we're on
+> Github" commit three years ago, holding one's breath on that is probably not
+> to be recommended).
 
 I also modified the Speed test to repeat the small hashes 16 times in order to
 show the cycles when the hash is hot in the CPU.  The old way that SMHasher was
@@ -63,8 +74,6 @@ Murmur3F
 
 Original SMHasher Readme:
 
-=======
->>>>>>> 88e89762ea2e429040f7c235c5304cdb978a236e
 ## [SMHasher](https://github.com/aappleby/smhasher/wiki) is a test suite designed to test the distribution, collision, and performance properties of non-cryptographic hash functions.
 
 This is the home for the [MurmurHash](https://github.com/aappleby/smhasher/tree/master/src) family of hash functions along with the [SMHasher](https://github.com/aappleby/smhasher/tree/master/src) test suite used to verify them. SMHasher is released under the MIT license. All MurmurHash versions are public domain software, and the author disclaims all copyright to their code.
