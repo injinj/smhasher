@@ -153,7 +153,7 @@ NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed
   volatile register int64_t begin,end;
   
   uint32_t temp[16];
-  
+
   if (len < 1024)
   {
     uint32_t align_len = (len + 3) / 4;

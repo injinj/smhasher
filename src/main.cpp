@@ -74,8 +74,8 @@ HashInfo g_hashes[] =
 
   { AESHash128_test,     128, 0x3FC3FED2, "AES128",      "AES128-bit result" },
   { AESHash64_test,       64, 0x5243FFAC, "AES64",       "AES64-bit result" },
-  { RiskyHash64_test,     64, 0x2E6E523C, "Risky64",     "facil.io RiskyHash 64-bit" },
-  { RiskyHash128_test,   128, 0x3E7F7A8B, "Risky128",    "facil.io RiskyHash 128-bit" },
+  { RiskyHash64_test,     64, 0x13AA4AB6, "Risky64",     "facil.io RiskyHash 64-bit" },
+  { RiskyHash128_test,   128, 0x162D05EE, "Risky128",    "facil.io RiskyHash 128-bit" },
 
   // hmakholm hashes
 

@@ -31,10 +31,11 @@ static const uint64_t RISKY_PRIME_0 = 0xFBBA3FA15B22113B, // 1111101110111010001
                       RISKY_PRIME_1 = 0xAB137439982B86C9; // 1010101100010011011101000011100110011000001010111000011011001001
 
 /* Risky Hash consumption round */
-#define fio_risky_consume(s, w)                                                \
-  (s) ^= (w);                                                                  \
-  (s) = fio_lrot64((s), 33) + (w);                                             \
-  (s) *= RISKY_PRIME_0;
+#define fio_risky_consume(v, w)                                                \
+  (v) += (w);                                                                  \
+  (v) = fio_lrot64((v), 33);                                                   \
+  (v) += (w);                                                                  \
+  (v) *= RISKY_PRIME_0;
 
 #define fio_risky_compress(data, len, v0, v1, v2, v3) \
   for (size_t i = len >> 5; i; --i) { \
@@ -136,6 +137,7 @@ void fio_risky_hash128(const void *data_, size_t len, uint64_t *h1,  uint64_t *h
           fio_lrot64(v2, 47) + fio_lrot64(v3, 57);
   h2[0] = fio_lrot64(v2, 17) + fio_lrot64(v3, 13) +
           fio_lrot64(v0, 47) + fio_lrot64(v1, 57);
+  len ^= (len << 33);
   h1[0] += len;
   h1[0] += v0 * RISKY_PRIME_1;
   h1[0] ^= fio_lrot64(h1[0], 13);
