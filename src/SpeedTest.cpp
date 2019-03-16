@@ -148,30 +148,35 @@ void FilterOutliers2 ( std::vector<double> & v )
 // possible by marking the function as NEVER_INLINE (to keep the optimizer from
 // moving it) and marking the timing variables as "volatile register".
 
-NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed )
+NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed, bool speedseed )
 {
   volatile register int64_t begin,end;
   
-  uint32_t temp[16];
-
+  uint64_t temp[128 / 8];
   if (len < 1024)
   {
-    uint32_t align_len = (len + 3) / 4;
-    uint32_t *buf = new uint32_t[align_len]; /* from rurban */
-    memset(buf, 0, align_len * 4);
+    uint64_t align_len = (len + 7) / 8;
+    uint64_t *buf = new uint64_t[align_len];  /* from rurban */
+    memset(buf, 0, align_len * 8);
     memcpy(buf, key, len);
-    begin = rdtsc();
-    for (int i = 0; i < 16; i++)
-    {
-      hash(buf,len,seed,temp);
-      seed += temp[0];
-      buf[0] ^= temp[0];
+    if ( speedseed ) {
+      begin = rdtsc();
+      for (int i = 0; i < 32; i++) {
+        hash(buf,len,seed,temp);
+        seed += temp[0];
+        /*buf[0] ^= temp[0];*/
+      }
+      end = rdtsc();
     }
-    end = rdtsc();
+    else {
+      begin = rdtsc();
+      for (int i = 0; i < 32; i++)
+        hash(buf,len,seed,temp);
+      end = rdtsc();
+    }
     delete [] buf;
-    return (end-begin) >> 4;
+    return (end-begin) >> 5;
   }
-
   begin = rdtsc();
   hash(key,len,seed,temp);
   end = rdtsc();
@@ -180,7 +185,7 @@ NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed
 
 //-----------------------------------------------------------------------------
 
-double SpeedTest ( pfHash hash, uint32_t seed, const int trials, const int blocksize, const int align )
+double SpeedTest ( pfHash hash, uint32_t seed, const int trials, const int blocksize, const int align, bool speedseed )
 {
   Rand r(seed);
   
@@ -204,7 +209,7 @@ double SpeedTest ( pfHash hash, uint32_t seed, const int trials, const int block
   {
     r.rand_p(block,blocksize);
     
-    double t = (double)timehash(hash,block,blocksize,itrial);
+    double t = (double)timehash(hash,block,blocksize,itrial,speedseed);
     
     if(t > 0) times.push_back(t);
   }
@@ -233,7 +238,7 @@ void BulkSpeedTest ( pfHash hash, uint32_t seed, bool plot )
 
   for(int align = 0; align < 8; align++)
   {
-    double cycles = SpeedTest(hash,seed,trials,blocksize,align);
+    double cycles = SpeedTest(hash,seed,trials,blocksize,align,false);
     
     double bestbpc = double(blocksize)/cycles;
     
@@ -247,7 +252,7 @@ void BulkSpeedTest ( pfHash hash, uint32_t seed, bool plot )
 
 //-----------------------------------------------------------------------------
 
-void TinySpeedTest ( pfHash hash, int hashsize, int keysize, uint32_t seed, double & /*outCycles*/, bool plot )
+void TinySpeedTest ( pfHash hash, int hashsize, int keysize, uint32_t seed, double & /*outCycles*/, bool plot, bool speedseed )
 {
   const int trials = 999999;
 
@@ -256,7 +261,7 @@ void TinySpeedTest ( pfHash hash, int hashsize, int keysize, uint32_t seed, doub
   else
     printf("%d ",keysize);
   
-  double cycles = SpeedTest(hash,seed,trials,keysize,0);
+  double cycles = SpeedTest(hash,seed,trials,keysize,0,speedseed);
   
   if ( ! plot )
     printf("%8.2f cycles/hash\n",cycles);  

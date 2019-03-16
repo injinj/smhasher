@@ -30,6 +30,7 @@ bool g_testWindow      = false;
 bool g_testText        = false;
 bool g_testZeroes      = false;
 bool g_testSeed        = false;
+bool g_speedSeed       = false;
 bool g_testLongNeighbs = false;
 bool g_plot            = false;
 
@@ -76,6 +77,8 @@ HashInfo g_hashes[] =
   { AESHash64_test,       64, 0x5243FFAC, "AES64",       "AES64-bit result" },
   { RiskyHash64_test,     64, 0x13AA4AB6, "Risky64",     "facil.io RiskyHash 64-bit" },
   { RiskyHash128_test,   128, 0x162D05EE, "Risky128",    "facil.io RiskyHash 128-bit" },
+  { XXH364_test,          64, 0xF6FED399, "XXH364",      "Yann Collet's XXH3 64-bit" },
+  { XXH3128_test,        128, 0xCE2101E7, "XXH3128",     "Yann Collet's XXH3 128-bit" },
 
   // hmakholm hashes
 
@@ -191,7 +194,7 @@ void test ( hashfunc<hashtype> hash, HashInfo * info )
       {
         double cycles;
 
-        TinySpeedTest(hashfunc<hashtype>(info->hash),sizeof(hashtype),i,info->verification,cycles,g_plot);
+        TinySpeedTest(hashfunc<hashtype>(info->hash),sizeof(hashtype),i,info->verification,cycles,g_plot,g_speedSeed);
       }
     }
     if ( ! g_plot )
@@ -627,6 +630,7 @@ int main ( int argc, char ** argv )
         "  options:\n"
         "    -y / --sanity      : Test sanity\n"
         "    -s / --speed       : Small key speed\n"
+        "    -S / --speedseed   : Small key speed with reseed\n"
         "    -n / --plot        : Output numbers for gnuplot\n"
         "    -k / --bulk        : Bulk key speed\n"
         "    -a / --avalanche   : Avalanche test\n"
@@ -671,6 +675,7 @@ int main ( int argc, char ** argv )
   if ( argc > 2 || ( argc > 1 && argv[ 1 ][ 0 ] == '-' ) ) {
     g_testSanity      = args_find( argc, argv, "-y", "--sanity" );
     g_testSpeed       = args_find( argc, argv, "-s", "--speed" );
+    g_speedSeed       = args_find( argc, argv, "-S", "--speedseed" );
     g_plot            = args_find( argc, argv, "-n", "--plot" );
     g_testBulkSpeed   = args_find( argc, argv, "-k", "--bulk" );
     g_testAvalanche   = args_find( argc, argv, "-a", "--avalanche" );
@@ -691,6 +696,7 @@ int main ( int argc, char ** argv )
     do_32             = args_find( argc, argv, "-32", "--32" );
     do_64             = args_find( argc, argv, "-64", "--64" );
     do_128            = args_find( argc, argv, "-128", "--128" );
+    if ( g_speedSeed ) g_testSpeed = true;
   }
 
   if ( do_everything || do_32 || do_64 || do_128 ) {

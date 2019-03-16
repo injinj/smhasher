@@ -37,6 +37,7 @@ add_library(
   PMurHash.c
   AESTest.cpp
   RiskyTest.cpp
+  Xxh3Test.cpp
 )
 
 add_executable(

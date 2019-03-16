@@ -58,6 +58,12 @@ void AESHash64_test        ( const void * key, int len, uint32_t seed, void * ou
 void RiskyHash128_test     ( const void * key, int len, uint32_t seed, void * out );
 void RiskyHash64_test      ( const void * key, int len, uint32_t seed, void * out );
 
+//----------
+// Xxh3
+
+void XXH3128_test          ( const void * key, int len, uint32_t seed, void * out );
+void XXH364_test           ( const void * key, int len, uint32_t seed, void * out );
+
 uint32_t MurmurOAAT ( const void * key, int len, uint32_t seed );
 
 //----------

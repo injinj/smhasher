@@ -18,17 +18,24 @@ I merged the LongNeighborTest from [hmakholm](https://github.com/hmakholm/smhash
 > Github" commit three years ago, holding one's breath on that is probably not
 > to be recommended).
 
-I also modified the Speed test to repeat the small hashes 16 times in order to
-show the cycles when the hash is hot in the CPU.  The old way that SMHasher was
-doing it, caused the overhead of the timing code to dominate the overall time.
-This is unrealistic in real life, but it shows the differences between the
-hashes a bit more clearly.  Also, cycle times on the order of nanoseconds
-rarely makes that big of a difference.  What is more likely is that the memory
-latency of loading the key will dominate the time of the hash.
+There are two variations of the small hash value speed test.  The first is a
+just calling hash() in a loop.  The second is calling hash() and feeding the
+result into hash() seed (this is also used in
+[rurban](https://github.com/rurban/smhasher)).  This causes the result of the
+hash() to be needed immediately, causing the pipeline to flush.  I've dubbed
+this a latency test, since this is probably how the hashes will be used in a
+program:  a hash is usually used immediately after computing it (for a
+hashtable lookup, for example).  The latency test adds a few CPU cycles to each
+hash function, depending on how long it takes for the pipeline to flush.  This
+is variable for each hash, some have longer latency than others.
 
 Here are graphs for the 64 bit and 128 bit hashes as run on a i9-7960X
 (skylake) using these gnuplot scripts: [plot64.gnuplot](plot64.gnuplot)
 and [plot128.gnuplot](plot128.gnuplot).
+
+And these are graphs for the 64 bit and 128 bit latency as run on a i9-7960X
+(skylake) using these gnuplot scripts: [plot64lat.gnuplot](plot64lat.gnuplot)
+and [plot128lat.gnuplot](plot128lat.gnuplot).
 
 To use the plot scripts, load them in gnuplot like this (I'm using Fedora 28):
 
@@ -58,19 +65,15 @@ AES64
 Risky64
 Murmur2B
 Murmur2C
-gnuplot> load "plot128.gnuplot"
-donothing128
-City128
-Spooky128
-AES128
-Risky128
-Murmur3C
-Murmur3F
 ```
 
 ![plot64](plot64.svg)
 
 ![plot128](plot128.svg)
+
+![plot64lat](plot64lat.svg)
+
+![plot128lat](plot128lat.svg)
 
 Original SMHasher Readme:
 
