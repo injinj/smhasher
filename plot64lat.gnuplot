@@ -18,6 +18,9 @@
 !echo XXH364
 !taskset -c 1 ./SMHasher XXH364 -S -n > XXH364.txt
 !tail -1 XXH364.txt | awk '{ printf "%s %s XXH364\n", $1, $2 }' > XXH364label.txt
+!echo Meow64
+!taskset -c 1 ./SMHasher Meow64 -S -n > Meow64.txt
+!tail -1 Meow64.txt | awk '{ printf "%s %s Meow64\n", $1, $2 }' > Meow64label.txt
 !echo Murmur2B
 !taskset -c 1 ./SMHasher Murmur2B -S -n > Murmur2B.txt
 !tail -1 Murmur2B.txt | awk '{ printf "%s %s Murmur2B\n", $1, $2 }' > Murmur2Blabel.txt
@@ -43,6 +46,8 @@ plot "donothing64.txt" with linespoints, \
      "Risky64label.txt" with labels offset +5,0, \
      "XXH364.txt" with linespoints, \
      "XXH364label.txt" with labels offset +5,0, \
+     "Meow64.txt" with linespoints, \
+     "Meow64label.txt" with labels offset +5,0, \
      "Murmur2B.txt" with linespoints, \
      "Murmur2Blabel.txt" with labels offset +6,+1, \
      "Murmur2C.txt" with linespoints, \

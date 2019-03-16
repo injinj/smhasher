@@ -18,6 +18,9 @@
 !echo XXH3128
 !taskset -c 1 ./SMHasher XXH3128 -S -n > XXH3128.txt
 !tail -1 XXH3128.txt | awk '{ printf "%s %s XXH3128\n", $1, $2 }' > XXH3128label.txt
+!echo Meow128
+!taskset -c 1 ./SMHasher Meow128 -S -n > Meow128.txt
+!tail -1 Meow128.txt | awk '{ printf "%s %s Meow128\n", $1, $2 }' > Meow128label.txt
 !echo Murmur3C
 !taskset -c 1 ./SMHasher Murmur3C -S -n > Murmur3C.txt
 !tail -1 Murmur3C.txt | awk '{ printf "%s %s Murmur3C\n", $1, $2 }' > Murmur3Clabel.txt
@@ -34,7 +37,7 @@ set grid
 plot "donothing128.txt" with linespoints, \
      "donothing128label.txt" with labels offset +7,0, \
      "City128.txt" with linespoints, \
-     "City128label.txt" with labels offset +5,0, \
+     "City128label.txt" with labels offset +5,1, \
      "Spooky128.txt" with linespoints, \
      "Spooky128label.txt" with labels offset +6,0, \
      "AES128.txt" with linespoints, \
@@ -43,6 +46,8 @@ plot "donothing128.txt" with linespoints, \
      "Risky128label.txt" with labels offset +5,0, \
      "XXH3128.txt" with linespoints, \
      "XXH3128label.txt" with labels offset +5,0, \
+     "Meow128.txt" with linespoints, \
+     "Meow128label.txt" with labels offset +5,0, \
      "Murmur3C.txt" with linespoints, \
      "Murmur3Clabel.txt" with labels offset +6,0, \
      "Murmur3F.txt" with linespoints, \

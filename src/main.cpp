@@ -79,6 +79,8 @@ HashInfo g_hashes[] =
   { RiskyHash128_test,   128, 0x162D05EE, "Risky128",    "facil.io RiskyHash 128-bit" },
   { XXH364_test,          64, 0xF6FED399, "XXH364",      "Yann Collet's XXH3 64-bit" },
   { XXH3128_test,        128, 0xCE2101E7, "XXH3128",     "Yann Collet's XXH3 128-bit" },
+  { Meow64_test,          64, 0xAE45F829, "Meow64",      "Meow 64-bit" },
+  { Meow128_test,        128, 0x1260877B, "Meow128",     "Meow 128-bit" },
 
   // hmakholm hashes
 

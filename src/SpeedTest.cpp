@@ -147,7 +147,7 @@ void FilterOutliers2 ( std::vector<double> & v )
 // as possible, but that's hard to do portably. We'll try and get as close as
 // possible by marking the function as NEVER_INLINE (to keep the optimizer from
 // moving it) and marking the timing variables as "volatile register".
-
+int64_t total;
 NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed, bool speedseed )
 {
   volatile register int64_t begin,end;
@@ -170,8 +170,10 @@ NEVER_INLINE int64_t timehash ( pfHash hash, const void * key, int len, int seed
     }
     else {
       begin = rdtsc();
-      for (int i = 0; i < 32; i++)
+      for (int i = 0; i < 32; i++) {
         hash(buf,len,seed,temp);
+        total += temp[0];
+      }
       end = rdtsc();
     }
     delete [] buf;

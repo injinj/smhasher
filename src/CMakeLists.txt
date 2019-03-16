@@ -38,6 +38,7 @@ add_library(
   AESTest.cpp
   RiskyTest.cpp
   Xxh3Test.cpp
+  MeowTest.cpp
 )
 
 add_executable(

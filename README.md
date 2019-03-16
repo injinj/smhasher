@@ -9,6 +9,9 @@ require AES and AVX support on x64.
 3. [Xxh3Test.cpp](src/Xxh3Test.cpp) and [xxh3.h](src/xxh3.h), [xxhash.c](src/xxhash.c), [xxhash.h](src/xxhash.h) are
 hashes from [Cyan4973](https://github.com/Cyan4973/xxHash).
 
+4. [MeowTest.cpp](src/MeowTest.cpp) and [meow_hash.h](src/meow_hash.h), [meow_intrinsics.h](src/meow_intrinsics.h) are
+hashes from [cmuratori](https://github.com/cmuratori/meow_hash).
+
 I merged the LongNeighborTest from [hmakholm](https://github.com/hmakholm/smhasher):
 
 > # Fork information
