@@ -49,6 +49,6 @@ plot "donothing64.txt" with linespoints, \
      "Meow64.txt" with linespoints, \
      "Meow64label.txt" with labels offset +5,0, \
      "Murmur2B.txt" with linespoints, \
-     "Murmur2Blabel.txt" with labels offset +6,+1, \
+     "Murmur2Blabel.txt" with labels offset +6,0, \
      "Murmur2C.txt" with linespoints, \
      "Murmur2Clabel.txt" with labels offset +6,0

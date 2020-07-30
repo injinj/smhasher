@@ -37,13 +37,13 @@ set grid
 plot "donothing128.txt" with linespoints, \
      "donothing128label.txt" with labels offset +7,0, \
      "City128.txt" with linespoints, \
-     "City128label.txt" with labels offset +5,1, \
+     "City128label.txt" with labels offset +5,0, \
      "Spooky128.txt" with linespoints, \
      "Spooky128label.txt" with labels offset +6,0, \
      "AES128.txt" with linespoints, \
      "AES128label.txt" with labels offset +5,0, \
      "Risky128.txt" with linespoints, \
-     "Risky128label.txt" with labels offset +5,0, \
+     "Risky128label.txt" with labels offset +5,-1, \
      "XXH3128.txt" with linespoints, \
      "XXH3128label.txt" with labels offset +5,0, \
      "Meow128.txt" with linespoints, \

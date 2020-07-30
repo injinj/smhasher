@@ -77,10 +77,10 @@ HashInfo g_hashes[] =
   { AESHash64_test,       64, 0x5243FFAC, "AES64",       "AES64-bit result" },
   { RiskyHash64_test,     64, 0x13AA4AB6, "Risky64",     "facil.io RiskyHash 64-bit" },
   { RiskyHash128_test,   128, 0x162D05EE, "Risky128",    "facil.io RiskyHash 128-bit" },
-  { XXH364_test,          64, 0xF6FED399, "XXH364",      "Yann Collet's XXH3 64-bit" },
-  { XXH3128_test,        128, 0xCE2101E7, "XXH3128",     "Yann Collet's XXH3 128-bit" },
-  { Meow64_test,          64, 0xAE45F829, "Meow64",      "Meow 64-bit" },
-  { Meow128_test,        128, 0x1260877B, "Meow128",     "Meow 128-bit" },
+  { XXH364_test,          64, 0x9A636405, "XXH364",      "Yann Collet's XXH3 64-bit" },
+  { XXH3128_test,        128, 0x5AE48E84, "XXH3128",     "Yann Collet's XXH3 128-bit" },
+  { Meow64_test,          64, 0xFD924253, "Meow64",      "Meow 64-bit" },
+  { Meow128_test,        128, 0xAB7A5427, "Meow128",     "Meow 128-bit" },
 
   // hmakholm hashes
 

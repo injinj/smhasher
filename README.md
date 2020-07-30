@@ -7,10 +7,10 @@ require AES and AVX support on x64.
 [facil.io](https://github.com/boazsegev/facil.io) located in [fio.h](https://github.com/boazsegev/facil.io/blob/master/lib/facil/fio.h).
 
 3. [Xxh3Test.cpp](src/Xxh3Test.cpp) and [xxh3.h](src/xxh3.h), [xxhash.c](src/xxhash.c), [xxhash.h](src/xxhash.h) are
-hashes from [Cyan4973](https://github.com/Cyan4973/xxHash).
+hashes from [Cyan4973](https://github.com/Cyan4973/xxHash) (updated July 2020).
 
-4. [MeowTest.cpp](src/MeowTest.cpp) and [meow_hash.h](src/meow_hash.h), [meow_intrinsics.h](src/meow_intrinsics.h) are
-hashes from [cmuratori](https://github.com/cmuratori/meow_hash).
+4. [MeowTest.cpp](src/MeowTest.cpp) and [meow_hash.h](src/meow_hash.h) are
+hashes from [cmuratori](https://github.com/injinj/meow_hash) (added 2nd round July 2020).
 
 I merged the LongNeighborTest from [hmakholm](https://github.com/hmakholm/smhasher):
 
@@ -35,17 +35,17 @@ hashtable lookup, for example).  The latency test adds a few CPU cycles to each
 hash function, depending on how long it takes for the pipeline to flush.  This
 is variable for each hash, some have longer latency than others.
 
-Here are graphs for the 64 bit and 128 bit hashes as run on a i9-7960X
-(skylake) using these gnuplot scripts: [plot64.gnuplot](plot64.gnuplot)
+Here are graphs for the 64 bit and 128 bit hashes as run on a Ryzen 3970X
+using these gnuplot scripts: [plot64.gnuplot](plot64.gnuplot)
 and [plot128.gnuplot](plot128.gnuplot).
 
-And these are graphs for the 64 bit and 128 bit latency as run on a i9-7960X
-(skylake) using these gnuplot scripts: [plot64lat.gnuplot](plot64lat.gnuplot)
+And these are graphs for the 64 bit and 128 bit latency as run on a Ryzen 3970X
+using these gnuplot scripts: [plot64lat.gnuplot](plot64lat.gnuplot)
 and [plot128lat.gnuplot](plot128lat.gnuplot).
 
 The cmake was changed to use the gcc flag '-march=native'.
 
-To use the plot scripts, load them in gnuplot like this (I'm using Fedora 28):
+To use the plot scripts, load them in gnuplot like this (I'm using Fedora 32):
 
 ```console
 [5875]; git clone https://github.com/injinj/smhasher

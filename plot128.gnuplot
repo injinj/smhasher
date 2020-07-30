@@ -43,7 +43,7 @@ plot "donothing128.txt" with linespoints, \
      "AES128.txt" with linespoints, \
      "AES128label.txt" with labels offset +5,0, \
      "Risky128.txt" with linespoints, \
-     "Risky128label.txt" with labels offset +5,+1, \
+     "Risky128label.txt" with labels offset +5,0, \
      "XXH3128.txt" with linespoints, \
      "XXH3128label.txt" with labels offset +5,0, \
      "Meow128.txt" with linespoints, \
