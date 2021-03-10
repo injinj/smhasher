@@ -12,6 +12,15 @@ hashes from [Cyan4973](https://github.com/Cyan4973/xxHash) (updated July 2020).
 4. [MeowTest.cpp](src/MeowTest.cpp) and [meow_hash.h](src/meow_hash.h) are
 hashes from [cmuratori](https://github.com/injinj/meow_hash) (added 2nd round July 2020).
 
+With MeowHash, which is AES based, I've found that a SIMD hashing can
+accerlerate the hash throughput.  Computing 4 hashes at a time can almost
+double the hash rate, expecially when they keys are the same size.  These
+functions in this file,
+[key_hash.cpp](https://github.com/raitechnology/raikv/blob/3ce2b23e0d9853fe4babcd9127d81faa1ebdfe86/src/key_hash.c#L1690)
+is where the code lives, and
+[hash_test.cpp](https://github.com/raitechnology/raikv/blob/3ce2b23e0d9853fe4babcd9127d81faa1ebdfe86/test/hash_test.cpp#L277)
+is an example of the usage (Mar 10 2021).
+
 I merged the LongNeighborTest from [hmakholm](https://github.com/hmakholm/smhasher):
 
 > # Fork information
